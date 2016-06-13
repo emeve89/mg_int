@@ -51,15 +51,14 @@ It returns a hash with two keys
 }
 ```
 
-#Specs
-##Run
+#Run Specs
 1. Go to the directory where the code is located.
 2. Run
 ```
 rake
 ```
 
-#Environmet variables
+#Environment variables
 The ENV variables are managed with dotenv.
 
 1. Create a .evn file
