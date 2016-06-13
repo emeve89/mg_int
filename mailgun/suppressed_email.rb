@@ -50,6 +50,7 @@ module Mailgun
       return 'bounced' if bounced?
       return 'unsubscribed' if unsubscribed?
       return 'complaint' if complaint?
+      'not_suppressed'
     end
   end
 end

@@ -21,6 +21,20 @@ describe Mailgun::SuppressedEmail do
   end
 
   describe '#call' do
+    context 'when the email is not suppressed' do
+      let(:expected_response) do
+        {
+            suppressed: false,
+            status: 'not_suppressed'
+        }
+      end
+      it 'returns a proper response' do
+        allow(klass).to receive(:bounced?).and_return(false)
+        allow(klass).to receive(:unsubscribed?).and_return(false)
+        allow(klass).to receive(:complaint?).and_return(false)
+        expect(klass.call).to eq expected_response
+      end
+    end
     context 'when email is bounced' do
       let(:expected_response) do
         {
