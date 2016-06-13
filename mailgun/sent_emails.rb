@@ -1,6 +1,9 @@
 module Mailgun
+  #
+  # This class fetches all messages delivered to a given email address
+  #
   class SentEmails
-    BASE_URL = "https://api:#{ENV['MAILGUN_API_KEY']}@api.mailgun.net/v3/#{ENV['MAILGUN_DOMAIN']}"
+    BASE_URL = "https://api:#{ENV['MAILGUN_API_KEY']}@api.mailgun.net/v3/#{ENV['MAILGUN_DOMAIN']}".freeze
     EVENTS_ENDPOINT = "#{BASE_URL}/events".freeze
 
     def initialize(email)
@@ -17,9 +20,9 @@ module Mailgun
 
     def params
       {
-          recipient: email,
-          event: 'delivered',
-          limit: 300
+        recipient: email,
+        event: 'delivered',
+        limit: 300
       }
     end
 

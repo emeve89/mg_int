@@ -1,9 +1,13 @@
 module Mailgun
+  #
+  # This class checks if a given email is listed
+  # in one of the suppression lists.
+  #
   class SuppressedEmail
-    BASE_URL = "https://api:#{ENV['MAILGUN_API_KEY']}@api.mailgun.net/v3/#{ENV['MAILGUN_DOMAIN']}"
-    BOUNCE_ENDPOINT = "#{BASE_URL}/bounces/"
-    UNSUBSCRIBE_ENDPOINT = "#{BASE_URL}/unsubscribes/"
-    COMPLAINTS_ENDPOINT = "#{BASE_URL}/complaints/"
+    BASE_URL = "https://api:#{ENV['MAILGUN_API_KEY']}@api.mailgun.net/v3/#{ENV['MAILGUN_DOMAIN']}".freeze
+    BOUNCE_ENDPOINT = "#{BASE_URL}/bounces/".freeze
+    UNSUBSCRIBE_ENDPOINT = "#{BASE_URL}/unsubscribes/".freeze
+    COMPLAINTS_ENDPOINT = "#{BASE_URL}/complaints/".freeze
 
     attr_reader :email
 
@@ -13,24 +17,33 @@ module Mailgun
 
     def call
       {
-          suppressed: (bounced? || unsubscribed? || complaint?),
-          status: set_status
+        suppressed: suppressed?,
+        status: set_status
       }
-
     end
 
     private
 
+    def suppressed?
+      bounced? || unsubscribed? || complaint?
+    end
+
     def bounced?
-      RestClient.get(BOUNCE_ENDPOINT.concat(email)) {|response, _, _| response.code.equal?(200) }
+      RestClient.get(BOUNCE_ENDPOINT.concat(email)) do |response, _, _|
+        response.code.equal?(200)
+      end
     end
 
     def unsubscribed?
-      RestClient.get(UNSUBSCRIBE_ENDPOINT.concat(email)) {|response, _, _| response.code.equal?(200) }
+      RestClient.get(UNSUBSCRIBE_ENDPOINT.concat(email)) do |response, _, _|
+        response.code.equal?(200)
+      end
     end
 
     def complaint?
-      RestClient.get(COMPLAINTS_ENDPOINT.concat(email)) {|response, _, _| response.code.equal?(200) }
+      RestClient.get(COMPLAINTS_ENDPOINT.concat(email)) do |response, _, _|
+        response.code.equal?(200)
+      end
     end
 
     def set_status
